@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestalt Academy</title>
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+  <!-- React y Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-white">
+  <div id="root"></div>
+
+  <script type="text/babel">
+
+    const GestaltAcademy = () => {
+      const [currentPrinciple, setCurrentPrinciple] = React.useState(0);
+      const [isAnimating, setIsAnimating] = React.useState(false);
+      const [activeDemo, setActiveDemo] = React.useState('proximity');
+      const [demoSettings, setDemoSettings] = React.useState({
+        elements: 6,
+        spacing: 20,
+        size: 60
+      });
+      const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+      const principles = [
+        {
+          id: 'proximity',
+          number: '01',
+          title: "Ley de la Proximidad",
+          subtitle: "Elementos cercanos se perciben como un grupo",
+          icon: "circle",
+          description: "Los objetos que están próximos entre sí tienden a percibirse como un conjunto o grupo unificado, creando relaciones visuales naturales.",
+          longDescription: "La proximidad es uno de los principios más intuitivos de la percepción visual. Nuestro cerebro automáticamente agrupa elementos que están cerca unos de otros, interpretándolos como relacionados o pertenecientes a la misma categoría.",
+          applications: [
+            "Agrupación funcional de elementos de interfaz",
+            "Organización de información en bloques coherentes", 
+            "Creación de jerarquía visual sin usar líneas divisorias",
+            "Diseño de navegación y sistemas de menú",
+            "Layout de contenido en páginas web y aplicaciones"
+          ],
+          examples: [
+            "Botones de acción agrupados en una barra de herramientas",
+            "Campos de formulario relacionados organizados en secciones",
+            "Elementos de navegación agrupados por categorías"
+          ]
+        },
+        {
+          id: 'similarity',
+          number: '02', 
+          title: "Ley de la Similitud",
+          subtitle: "Elementos similares se agrupan visualmente",
+          icon: "square",
+          description: "Los elementos que comparten características visuales similares (color, forma, tamaño, textura) se perciben como relacionados entre sí.",
+          longDescription: "La similitud permite crear agrupaciones visuales sin necesidad de proximidad física. Este principio es fundamental para establecer patrones, crear consistencia y comunicar relaciones conceptuales.",
+          applications: [
+            "Sistemas de iconografía coherentes",
+            "Paletas de colores para categorización",
+            "Tipografía consistente para jerarquía",
+            "Patrones repetitivos para unidad visual",
+            "Señalización y wayfinding systems"
+          ],
+          examples: [
+            "Todos los enlaces de un sitio web con el mismo color",
+            "Iconos con el mismo estilo visual para funciones similares",
+            "Botones primarios con características visuales idénticas"
+          ]
+        },
+        {
+          id: 'closure',
+          number: '03',
+          title: "Ley del Cierre",
+          subtitle: "Completamos formas incompletas mentalmente", 
+          icon: "zap",
+          description: "Nuestra mente completa automáticamente las formas que están incompletas o interrumpidas, llenando los espacios vacíos con información implícita.",
+          longDescription: "El principio de cierre demuestra la tendencia del cerebro humano a percibir formas completas incluso cuando la información visual está incompleta. Esto permite diseños más elegantes y minimalistas.",
+          applications: [
+            "Logotipos con formas sugeridas en lugar de completas",
+            "Interfaces que utilizan el espacio negativo efectivamente",
+            "Iconografía simplificada que mantiene reconocibilidad", 
+            "Patrones decorativos con interrupciones intencionales",
+            "Diseño de packaging y elementos gráficos"
+          ],
+          examples: [
+            "El logo de WWF (panda) que no está completamente definido",
+            "Iconos que sugieren formas sin cerrarlas completamente",
+            "Diseños tipográficos que juegan con espacios negativos"
+          ]
+        },
+        {
+          id: 'continuity',
+          number: '04',
+          title: "Ley de la Continuidad", 
+          subtitle: "Seguimos líneas y curvas naturalmente",
+          icon: "layers",
+          description: "Los elementos alineados o que siguen una dirección se perciben como continuos y relacionados, creando flujo visual direccional.",
+          longDescription: "La continuidad guía la atención del espectador a lo largo de un camino visual predecible. Este principio es crucial para crear composiciones que fluyan naturalmente y dirijan la mirada.",
+          applications: [
+            "Diseño de layouts con flujo de lectura claro",
+            "Sistemas de navegación que siguen patrones lineales",
+            "Composiciones fotográficas con líneas guía",
+            "Interfaces con elementos alineados estratégicamente",
+            "Señalización direccional y wayfinding"
+          ],
+          examples: [
+            "Menús de navegación horizontales que siguen una línea",
+            "Galerías de imágenes alineadas en grids",
+            "Formularios con campos organizados verticalmente"
+          ]
+        },
+        {
+          id: 'figure-ground',
+          number: '05',
+          title: "Ley de Figura y Fondo",
+          subtitle: "Distinguimos entre objeto principal y contexto",
+          icon: "eye",
+          description: "Separamos automáticamente los elementos principales (figura) del fondo o contexto visual, estableciendo jerarquía y profundidad.",
+          longDescription: "La relación figura-fondo es fundamental para la percepción visual. Define qué elementos emergen como importantes y cuáles actúan como contexto de soporte.",
+          applications: [
+            "Diseño de interfaces con jerarquía clara",
+            "Tipografía que se destaca del fondo",
+            "Logotipos con juegos de espacio positivo/negativo",
+            "Fotografía con separación clara de sujetos",
+            "Packaging que destaca información importante"
+          ],
+          examples: [
+            "Texto negro sobre fondo blanco para máxima legibilidad",
+            "Botones destacados sobre fondos sutiles",
+            "Logotipos que juegan con formas negativas y positivas"
+          ]
+        },
+        {
+          id: 'pragnanz',
+          number: '06', 
+          title: "Ley de la Pregnancia",
+          subtitle: "Preferimos formas simples y estables",
+          icon: "triangle",
+          description: "Tendemos a interpretar las formas de la manera más simple, regular y estable posible, buscando orden en la complejidad visual.",
+          longDescription: "También conocida como la ley de la simplicidad, este principio explica por qué preferimos interpretaciones visuales que requieren menor esfuerzo cognitivo.",
+          applications: [
+            "Diseño de logotipos simples y memorables",
+            "Iconografía minimalista y universal",
+            "Interfaces limpias sin decoración excesiva",
+            "Tipografía legible y formas geométricas básicas",
+            "Arquitectura y diseño industrial funcional"
+          ],
+          examples: [
+            "El logo de Apple: una forma simple y reconocible",
+            "Iconos de apps que usan formas geométricas básicas",
+            "Interfaces minimalistas como la de Google"
+          ]
+        },
+        {
+          id: 'common-region',
+          number: '07',
+          title: "Ley de la Región Común",
+          subtitle: "Elementos en la misma región se agrupan",
+          icon: "grid",
+          description: "Los elementos ubicados dentro de una región o área delimitada se perciben como grupo, independientemente de otros factores.",
+          longDescription: "La región común es un potente organizador visual que puede superar otros principios de agrupación. Es especialmente útil para organizar información compleja.",
+          applications: [
+            "Diseño de tarjetas y módulos de contenido",
+            "Organización de dashboards y paneles de control",
+            "Secciones de página web claramente delimitadas",
+            "Formularios con grupos de campos relacionados",
+            "Interfaces de e-commerce con productos agrupados"
+          ],
+          examples: [
+            "Tarjetas de producto en sitios de comercio electrónico",
+            "Módulos de contenido en redes sociales",
+            "Secciones de un dashboard empresarial"
+          ]
+        }
+      ];
+
+      const nextPrinciple = () => {
+        setIsAnimating(true);
+        setTimeout(() => {
+          setCurrentPrinciple((prev) => (prev + 1) % principles.length);
+          setIsAnimating(false);
+        }, 200);
+      };
+
+      const prevPrinciple = () => {
+        setIsAnimating(true);
+        setTimeout(() => {
+          setCurrentPrinciple((prev) => (prev - 1 + principles.length) % principles.length);
+          setIsAnimating(false);
+        }, 200);
+      };
+
+      const jumpToPrinciple = (index) => {
+        if (index !== currentPrinciple) {
+          setIsAnimating(true);
+          setTimeout(() => {
+            setCurrentPrinciple(index);
+            setIsAnimating(false);
+          }, 200);
+        }
+      };
+
+      // --- DEMOS ---
+      const ProximityDemo = ({ settings }) => (
+        <div className="w-full h-48 flex items-center justify-center bg-gray-50">
+          <div className="flex space-x-12">
+            <div className="flex space-x-2">
+              {[1, 2, 3].map(i => (
+                <div 
+                  key={i} 
+                  className="bg-black rounded-full transition-all duration-300" 
+                  style={{
+                    width: `${settings.size / 4}px`,
+                    height: `${settings.size / 4}px`
+                  }}
+                />
+              ))}
+            </div>
+            <div className="flex space-x-2">
+              {[1, 2, 3].map(i => (
+                <div 
+                  key={i} 
+                  className="bg-black rounded-full transition-all duration-300" 
+                  style={{
+                    width: `${settings.size / 4}px`,
+                    height: `${settings.size / 4}px`
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+
+      const SimilarityDemo = ({ settings }) => (
+        <div className="w-full h-48 flex items-center justify-center bg-gray-50">
+          <div className="grid grid-cols-4 gap-4">
+            {[...Array(16)].map((_, i) => (
+              <div
+                key={i}
+                className={`transition-all duration-300 ${
+                  i % 4 === 0 || i % 4 === 3 ? 'bg-black' : 'border-2 border-black bg-white'
+                }`}
+                style={{
+                  width: `${settings.size / 3}px`,
+                  height: `${settings.size / 3}px`
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      );
+
+      const ClosureDemo = ({ settings }) => (
+        <div className="w-full h-48 flex items-center justify-center bg-gray-50">
+          <svg width="150" height="150" viewBox="0 0 150 150" className="transition-all duration-300">
+            <path
+              d="M 30 75 Q 30 30, 75 30 Q 120 30, 120 75 Q 120 120, 75 120 Q 30 120, 30 75"
+              fill="none"
+              stroke="black"
+              strokeDasharray="15,8"
+              style={{
+                strokeWidth: `${settings.size / 20}px`
+              }}
+            />
+          </svg>
+        </div>
+      );
+
+      const ContinuityDemo = ({ settings }) => (
+        <div className="w-full h-48 flex items-center justify-center bg-gray-50">
+          <svg width="280" height="100" viewBox="0 0 280 100" className="transition-all duration-300">
+            <path
+              d="M 20 50 Q 80 20, 140 50 Q 200 80, 260 50"
+              fill="none"
+              stroke="black"
+              strokeWidth="3"
+            />
+            {[40, 90, 140, 190, 240].map((x, i) => (
+              <circle 
+                key={i} 
+                cx={x} 
+                cy={50 + Math.sin(i * 0.8) * 20} 
+                fill="black"
+                className="transition-all duration-300"
+                style={{
+                  r: `${settings.size / 15}px`
+                }}
+              />
+            ))}
+          </svg>
+        </div>
+      );
+
+      const FigureGroundDemo = ({ settings }) => (
+        <div className="w-full h-48 flex items-center justify-center bg-gray-50">
+          <div className="relative transition-all duration-300" style={{
+            width: `${settings.size}px`,
+            height: `${settings.size}px`
+          }}>
+            <div className="absolute inset-0 bg-black transform rotate-45" />
+            <div 
+              className="absolute bg-white rounded-full transition-all duration-300" 
+              style={{
+                top: `${settings.size / 6}px`,
+                left: `${settings.size / 6}px`,
+                width: `${settings.size * 2/3}px`,
+                height: `${settings.size * 2/3}px`
+              }}
+            />
+          </div>
+        </div>
+      );
+
+      const PragnanzDemo = ({ settings }) => (
+        <div className="w-full h-48 flex items-center justify-center space-x-8 bg-gray-50">
+          <div 
+            className="border-2 border-black transition-all duration-300" 
+            style={{
+              width: `${settings.size / 1.5}px`,
+              height: `${settings.size / 1.5}px`
+            }}
+          />
+          <div 
+            className="bg-black rounded-full transition-all duration-300" 
+            style={{
+              width: `${settings.size / 1.5}px`,
+              height: `${settings.size / 1.5}px`
+            }}
+          />
+          <div 
+            className="bg-black transition-all duration-300" 
+            style={{
+              width: `${settings.size / 1.5}px`,
+              height: `${settings.size / 1.5}px`,
+              clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'
+            }}
+          />
+        </div>
+      );
+
+      const CommonRegionDemo = ({ settings }) => (
+        <div className="w-full h-48 flex items-center justify-center space-x-8 bg-gray-50">
+          <div className="border-2 border-black p-4 space-y-3 transition-all duration-300">
+            {[1, 2, 3].map(i => (
+              <div 
+                key={i} 
+                className="bg-black rounded-full transition-all duration-300" 
+                style={{
+                  width: `${settings.size / 4}px`,
+                  height: `${settings.size / 4}px`
+                }}
+              />
+            ))}
+          </div>
+          <div className="border-2 border-black p-4 space-y-3 transition-all duration-300">
+            {[1, 2, 3].map(i => (
+              <div 
+                key={i} 
+                className="bg-black transition-all duration-300" 
+                style={{
+                  width: `${settings.size / 4}px`,
+                  height: `${settings.size / 4}px`
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      );
+
+      const renderDemo = (principleId) => {
+        const demos = {
+          proximity: ProximityDemo,
+          similarity: SimilarityDemo,
+          closure: ClosureDemo,
+          continuity: ContinuityDemo,
+          'figure-ground': FigureGroundDemo,
+          pragnanz: PragnanzDemo,
+          'common-region': CommonRegionDemo
+        };
+        
+        const DemoComponent = demos[principleId];
+        return DemoComponent ? <DemoComponent settings={demoSettings} /> : null;
+      };
+
+      const current = principles[currentPrinciple];
+
+      React.useEffect(() => {
+        // Cargar iconos de Lucide
+        lucide.createIcons();
+      }, [currentPrinciple, mobileMenuOpen]);
+
+      return (
+        <div className="min-h-screen bg-white text-black" style={{ fontFamily: 'Inter, sans-serif' }}>
+          {/* Barra de progreso */}
+          <div className="fixed top-0 left-0 w-full h-1 bg-gray-100 z-50">
+            <div 
+              className="h-full bg-black transition-all duration-300"
+              style={{ width: `${((currentPrinciple + 1) / principles.length) * 100}%` }}
+            />
+          </div>
+
+          {/* Header */}
+          <header className="fixed w-full top-1 bg-white/95 backdrop-blur-sm border-b border-gray-100 z-40">
+            <nav className="max-w-7xl mx-auto px-6 py-4">
+              <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-bold tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+                  Gestalt
+                </h1>
+                
+                <div className="hidden md:flex space-x-8">
+                  {['Principios', 'Laboratorio', 'Práctica'].map((item, index) => (
+                    <a 
+                      key={item}
+                      href={`#${item.toLowerCase()}`}
+                      className="text-sm font-medium text-gray-600 hover:text-black transition-colors relative"
+                    >
+                      {item}
+                      <span className="absolute -bottom-1 left-0 w-0 h-px bg-black transition-all duration-300 hover:w-full" />
+                    </a>
+                  ))}
+                </div>
+
+                <button 
+                  className="md:hidden p-2"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                >
+                  <i data-lucide={mobileMenuOpen ? "x" : "menu"} className="w-6 h-6"></i>
+                </button>
+              </div>
+
+              {mobileMenuOpen && (
+                <div className="md:hidden mt-4 space-y-2">
+                  {['Principios', 'Laboratorio', 'Práctica'].map((item) => (
+                    <a 
+                      key={item}
+                      href={`#${item.toLowerCase()}`}
+                      className="block text-sm font-medium text-gray-600 hover:text-black transition-colors"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </nav>
+          </header>
+
+          {/* Hero */}
+          <section className="pt-28 pb-20 px-6 bg-gradient-to-b from-gray-50 to-white">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-4xl md:text-6xl font-bold mb-6 leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Domina la Percepción Visual
+              </h2>
+              <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                Explora los principios fundamentales de la psicología Gestalt y cómo aplicarlos para crear diseños intuitivos, armónicos y visualmente impactantes.
+              </p>
+            </div>
+          </section>
+
+          {/* Carrusel de Principios */}
+          <section id="principios" className="py-20 px-6 bg-white">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex flex-col md:flex-row md:items-center gap-10">
+                {/* Descripción del principio */}
+                <div className="md:w-1/2 relative">
+                  <div 
+                    className={`transition-all duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}
+                  >
+                    <span className="text-sm font-mono text-gray-400">
+                      {current.number}
+                    </span>
+                    <h3 className="text-3xl font-bold mt-2 mb-4 flex items-center gap-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+                      <i data-lucide={current.icon} className="w-6 h-6"></i>
+                      {current.title}
+                    </h3>
+                    <h4 className="text-lg text-gray-600 mb-4">
+                      {current.subtitle}
+                    </h4>
+                    <p className="text-gray-600 leading-relaxed mb-4">
+                      {current.description}
+                    </p>
+                    <p className="text-gray-500 text-sm leading-relaxed">
+                      {current.longDescription}
+                    </p>
+                  </div>
+
+                  {/* Botones de navegación */}
+                  <div className="flex gap-4 mt-8">
+                    <button 
+                      onClick={prevPrinciple}
+                      className="p-2 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors"
+                    >
+                      <i data-lucide="chevron-left" className="w-5 h-5"></i>
+                    </button>
+                    <button 
+                      onClick={nextPrinciple}
+                      className="p-2 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors"
+                    >
+                      <i data-lucide="chevron-right" className="w-5 h-5"></i>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Demostración */}
+                <div className="md:w-1/2 bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                  {renderDemo(current.id)}
+                  <div className="flex justify-center mt-6 gap-2">
+                    {principles.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => jumpToPrinciple(i)}
+                        className={`w-2.5 h-2.5 rounded-full transition-all ${
+                          i === currentPrinciple ? 'bg-black w-4' : 'bg-gray-300 hover:bg-gray-400'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Laboratorio de Principios */}
+          <section id="laboratorio" className="py-20 px-6 bg-gray-50">
+            <div className="max-w-6xl mx-auto">
+              <h3 className="text-3xl font-bold mb-12 text-center" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Laboratorio Interactivo
+              </h3>
+
+              {/* Selector de principios */}
+              <div className="flex flex-wrap justify-center gap-3 mb-10">
+                {principles.map(p => (
+                  <button
+                    key={p.id}
+                    onClick={() => setActiveDemo(p.id)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                      activeDemo === p.id ? 'bg-black text-white' : 'bg-white border border-gray-200 hover:bg-gray-100'
+                    }`}
+                  >
+                    {p.title}
+                  </button>
+                ))}
+              </div>
+
+              {/* Demo activa */}
+              <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+                {renderDemo(activeDemo)}
+
+                {/* Controles */}
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600 mb-2">
+                      Tamaño
+                    </label>
+                    <input 
+                      type="range"
+                      min="30"
+                      max="120"
+                      value={demoSettings.size}
+                      onChange={(e) => setDemoSettings(prev => ({ ...prev, size: Number(e.target.value) }))}
+                      className="w-full"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600 mb-2">
+                      Espaciado
+                    </label>
+                    <input 
+                      type="range"
+                      min="0"
+                      max="50"
+                      value={demoSettings.spacing}
+                      onChange={(e) => setDemoSettings(prev => ({ ...prev, spacing: Number(e.target.value) }))}
+                      className="w-full"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600 mb-2">
+                      Elementos
+                    </label>
+                    <input 
+                      type="range"
+                      min="3"
+                      max="12"
+                      value={demoSettings.elements}
+                      onChange={(e) => setDemoSettings(prev => ({ ...prev, elements: Number(e.target.value) }))}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Sección de Práctica */}
+          <section id="practica" className="py-20 px-6 bg-white">
+            <div className="max-w-6xl mx-auto">
+              <h3 className="text-3xl font-bold mb-12 text-center" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Ejercicios Prácticos
+              </h3>
+
+              <div className="grid md:grid-cols-3 gap-6">
+                {principles.map(p => (
+                  <div 
+                    key={p.id}
+                    className="bg-gray-50 p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition-shadow"
+                  >
+                    <div className="flex items-center gap-2 mb-4">
+                      <i data-lucide={p.icon} className="w-5 h-5"></i>
+                      <h4 className="font-medium">{p.title}</h4>
+                    </div>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      {p.applications.slice(0, 3).map((app, i) => (
+                        <li key={i} className="flex gap-2 items-start">
+                          <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mt-1" />
+                          {app}
+                        </li>
+                      ))}
+                    </ul>
+                    <button className="mt-4 text-sm font-medium text-black hover:underline">
+                      Ver ejercicio →
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Footer */}
+          <footer className="bg-gray-50 py-12 px-6 border-t border-gray-100">
+            <div className="max-w-6xl mx-auto text-center">
+              <h4 className="text-xl font-bold mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Gestalt Academy
+              </h4>
+              <p className="text-gray-500 text-sm max-w-lg mx-auto mb-6">
+                Una plataforma educativa para comprender y aplicar los principios de percepción visual en el diseño moderno.
+              </p>
+              <div className="flex justify-center space-x-6">
+                {['github', 'twitter', 'instagram'].map(icon => (
+                  <a 
+                    key={icon}
+                    href="#"
+                    className="text-gray-400 hover:text-black transition-colors"
+                  >
+                    <i data-lucide={icon} className="w-5 h-5"></i>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </footer>
+        </div>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<GestaltAcademy />);
+
+  </script>
+</body>
+</html>
