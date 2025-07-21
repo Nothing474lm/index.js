@@ -635,7 +635,51 @@
           </section>
 
           {/* Footer */}
-          <footer className="bg-gray-50 py-12 px-6 border-t border-gray-100">
+          <footer <section className="bg-gray-50 py-12 px-6 border-t border-gray-100">
+  <div className="max-w-7xl mx-auto">
+    <div className="text-center mb-8">
+      <h2
+        className="text-3xl md:text-4xl font-light text-black"
+        style={{ fontFamily: 'Playfair Display, serif' }}
+      >
+        Laboratorio de Principios
+      </h2>
+      <p className="text-gray-600 mt-4 text-lg">
+        Experimenta y practica con los principios de Gestalt en tiempo real.
+      </p>
+    </div>
+
+    {/* Botón Ver Ejercicios */}
+    <div className="flex justify-center mb-8">
+      <button
+        onClick={() => setShowExercises(!showExercises)}
+        className="px-8 py-3 border border-black text-black font-medium rounded-lg hover:bg-black hover:text-white transition-colors"
+      >
+        {showExercises ? 'Ocultar Ejercicios' : 'Ver Ejercicios'}
+      </button>
+    </div>
+
+    {/* Panel de Ejercicios */}
+    {showExercises && (
+      <div className="max-w-3xl mx-auto bg-white border border-black rounded-lg shadow-lg p-6 mb-12 text-left">
+        <h3
+          className="text-xl font-semibold mb-4"
+          style={{ fontFamily: 'Playfair Display, serif' }}
+        >
+          Ejercicios de Práctica
+        </h3>
+        <ul className="text-gray-800 space-y-3 text-base">
+          <li>• Diseña una tarjeta agrupando elementos por proximidad.</li>
+          <li>• Busca 3 ejemplos de la ley de la similitud en páginas web.</li>
+          <li>• Redibuja un logotipo aplicando la ley del cierre.</li>
+          <li>• Crea un patrón aplicando figura y fondo.</li>
+          <li>• Haz un mini layout usando la ley de la región común.</li>
+        </ul>
+      </div>
+    )}
+
+    {/* Aquí puede ir tu contenido de demos o controles */}
+    <div className="md:w-1/2 b
             <div className="max-w-6xl mx-auto text-center">
               <h4 className="text-xl font-bold mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
                 Gestalt Academy
