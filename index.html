@@ -30,6 +30,7 @@
         size: 60
       });
       const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+      const [showExercises, setShowExercises] = React.useState(false); // Agregado
 
       const principles = [
         {
@@ -207,7 +208,7 @@
         }
       };
 
-      // --- DEMOS ---
+      // --- Demos ---
       const ProximityDemo = ({ settings }) => (
         <div className="w-full h-48 flex items-center justify-center bg-gray-50">
           <div className="flex space-x-12">
@@ -423,22 +424,22 @@
                       className="text-sm font-medium text-gray-600 hover:text-black transition-colors relative"
                     >
                       {item}
-                      <span className="absolute -bottom-1 left-0 w-0 h-px bg-black transition-all duration-300 hover:w-full" />
+                      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all duration-300 hover:w-full"></span>
                     </a>
                   ))}
                 </div>
 
                 <button 
-                  className="md:hidden p-2"
+                  className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 >
-                  <i data-lucide={mobileMenuOpen ? "x" : "menu"} className="w-6 h-6"></i>
+                  <i data-lucide="menu" className="w-5 h-5"></i>
                 </button>
               </div>
 
               {mobileMenuOpen && (
                 <div className="md:hidden mt-4 space-y-2">
-                  {['Principios', 'Laboratorio', 'Práctica'].map((item) => (
+                  {['Principios', 'Laboratorio', 'Práctica'].map(item => (
                     <a 
                       key={item}
                       href={`#${item.toLowerCase()}`}
@@ -454,73 +455,94 @@
           </header>
 
           {/* Hero */}
-          <section className="pt-28 pb-20 px-6 bg-gradient-to-b from-gray-50 to-white">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-4xl md:text-6xl font-bold mb-6 leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
-                Domina la Percepción Visual
+          <section className="relative pt-28 pb-20 px-6 bg-gradient-to-b from-white to-gray-50" id="inicio">
+            <div className="max-w-5xl mx-auto text-center">
+              <h2 
+                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight" 
+                style={{ fontFamily: 'Playfair Display, serif' }}
+              >
+                Aprende las Leyes de la Gestalt
               </h2>
-              <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                Explora los principios fundamentales de la psicología Gestalt y cómo aplicarlos para crear diseños intuitivos, armónicos y visualmente impactantes.
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Domina los principios psicológicos del diseño visual y crea composiciones que comuniquen con claridad y estética. 
+                Experimenta en nuestro laboratorio interactivo y pon en práctica tus conocimientos con ejercicios guiados.
               </p>
+              <div className="mt-10 flex justify-center gap-4">
+                <button 
+                  className="px-6 py-3 bg-black text-white rounded-full hover:bg-gray-900 transition-colors font-medium"
+                  onClick={nextPrinciple}
+                >
+                  Explorar Principios
+                </button>
+                <button 
+                  className="px-6 py-3 bg-gray-100 text-black rounded-full hover:bg-gray-200 transition-colors font-medium"
+                  onClick={() => document.getElementById('laboratorio').scrollIntoView({ behavior: 'smooth' })}
+                >
+                  Ir al Laboratorio
+                </button>
+              </div>
             </div>
           </section>
 
-          {/* Carrusel de Principios */}
-          <section id="principios" className="py-20 px-6 bg-white">
-            <div className="max-w-6xl mx-auto">
-              <div className="flex flex-col md:flex-row md:items-center gap-10">
-                {/* Descripción del principio */}
-                <div className="md:w-1/2 relative">
-                  <div 
-                    className={`transition-all duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}
-                  >
-                    <span className="text-sm font-mono text-gray-400">
-                      {current.number}
-                    </span>
-                    <h3 className="text-3xl font-bold mt-2 mb-4 flex items-center gap-2" style={{ fontFamily: 'Playfair Display, serif' }}>
-                      <i data-lucide={current.icon} className="w-6 h-6"></i>
-                      {current.title}
-                    </h3>
-                    <h4 className="text-lg text-gray-600 mb-4">
-                      {current.subtitle}
-                    </h4>
-                    <p className="text-gray-600 leading-relaxed mb-4">
-                      {current.description}
-                    </p>
-                    <p className="text-gray-500 text-sm leading-relaxed">
-                      {current.longDescription}
-                    </p>
+          {/* Principios */}
+          <section className="py-20 px-6" id="principios">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col md:flex-row gap-10 items-center">
+                {/* Contenido principal */}
+                <div className="md:w-1/2">
+                  <div className="mb-6 text-gray-400 font-mono text-sm">
+                    {current.number} / {principles.length}
                   </div>
+                  <h3 className="text-3xl font-bold mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    {current.title}
+                  </h3>
+                  <h4 className="text-lg text-gray-600 mb-6">{current.subtitle}</h4>
+                  <p className="text-gray-600 mb-6">{current.longDescription}</p>
+                  
+                  <h5 className="text-lg font-semibold mb-3">Aplicaciones:</h5>
+                  <ul className="list-disc list-inside text-gray-600 mb-6 space-y-1">
+                    {current.applications.map((app, i) => (
+                      <li key={i}>{app}</li>
+                    ))}
+                  </ul>
 
-                  {/* Botones de navegación */}
-                  <div className="flex gap-4 mt-8">
+                  <h5 className="text-lg font-semibold mb-3">Ejemplos:</h5>
+                  <ul className="list-disc list-inside text-gray-600 mb-8 space-y-1">
+                    {current.examples.map((ex, i) => (
+                      <li key={i}>{ex}</li>
+                    ))}
+                  </ul>
+
+                  <div className="flex gap-4">
                     <button 
+                      className="px-4 py-2 bg-gray-100 text-black rounded-full hover:bg-gray-200 transition-colors"
                       onClick={prevPrinciple}
-                      className="p-2 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors"
                     >
-                      <i data-lucide="chevron-left" className="w-5 h-5"></i>
+                      Anterior
                     </button>
                     <button 
+                      className="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-900 transition-colors"
                       onClick={nextPrinciple}
-                      className="p-2 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors"
                     >
-                      <i data-lucide="chevron-right" className="w-5 h-5"></i>
+                      Siguiente
                     </button>
                   </div>
                 </div>
 
-                {/* Demostración */}
-                <div className="md:w-1/2 bg-gray-50 rounded-2xl p-6 border border-gray-100">
-                  {renderDemo(current.id)}
-                  <div className="flex justify-center mt-6 gap-2">
-                    {principles.map((_, i) => (
+                {/* Carrusel de principios */}
+                <div className="md:w-1/2">
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    {principles.map((p, index) => (
                       <button
-                        key={i}
-                        onClick={() => jumpToPrinciple(i)}
-                        className={`w-2.5 h-2.5 rounded-full transition-all ${
-                          i === currentPrinciple ? 'bg-black w-4' : 'bg-gray-300 hover:bg-gray-400'
+                        key={p.id}
+                        onClick={() => jumpToPrinciple(index)}
+                        className={`p-4 border rounded-lg transition-all ${
+                          currentPrinciple === index ? 'bg-black text-white border-black' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
                         }`}
-                      />
+                      >
+                        <i data-lucide={p.icon} className="w-5 h-5 mb-2"></i>
+                        <span className="text-sm font-medium">{p.title}</span>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -528,21 +550,21 @@
             </div>
           </section>
 
-          {/* Laboratorio de Principios */}
-          <section id="laboratorio" className="py-20 px-6 bg-gray-50">
-            <div className="max-w-6xl mx-auto">
-              <h3 className="text-3xl font-bold mb-12 text-center" style={{ fontFamily: 'Playfair Display, serif' }}>
+          {/* Laboratorio */}
+          <section className="py-20 px-6 bg-gray-50 border-t border-gray-100" id="laboratorio">
+            <div className="max-w-7xl mx-auto">
+              <h3 className="text-3xl font-bold mb-10 text-center" style={{ fontFamily: 'Playfair Display, serif' }}>
                 Laboratorio Interactivo
               </h3>
-
-              {/* Selector de principios */}
-              <div className="flex flex-wrap justify-center gap-3 mb-10">
-                {principles.map(p => (
+              <div className="mb-6 flex justify-center gap-3 flex-wrap">
+                {principles.map((p) => (
                   <button
                     key={p.id}
                     onClick={() => setActiveDemo(p.id)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                      activeDemo === p.id ? 'bg-black text-white' : 'bg-white border border-gray-200 hover:bg-gray-100'
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      activeDemo === p.id 
+                        ? 'bg-black text-white' 
+                        : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-400'
                     }`}
                   >
                     {p.title}
@@ -551,137 +573,69 @@
               </div>
 
               {/* Demo activa */}
-              <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+              <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
                 {renderDemo(activeDemo)}
+              </div>
 
-                {/* Controles */}
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-2">
-                      Tamaño
-                    </label>
-                    <input 
-                      type="range"
-                      min="30"
-                      max="120"
-                      value={demoSettings.size}
-                      onChange={(e) => setDemoSettings(prev => ({ ...prev, size: Number(e.target.value) }))}
-                      className="w-full"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-2">
-                      Espaciado
-                    </label>
-                    <input 
-                      type="range"
-                      min="0"
-                      max="50"
-                      value={demoSettings.spacing}
-                      onChange={(e) => setDemoSettings(prev => ({ ...prev, spacing: Number(e.target.value) }))}
-                      className="w-full"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-2">
-                      Elementos
-                    </label>
-                    <input 
-                      type="range"
-                      min="3"
-                      max="12"
-                      value={demoSettings.elements}
-                      onChange={(e) => setDemoSettings(prev => ({ ...prev, elements: Number(e.target.value) }))}
-                      className="w-full"
-                    />
-                  </div>
-                </div>
+              {/* Controles */}
+              <div className="flex justify-center gap-4">
+                <button 
+                  className="px-4 py-2 bg-gray-100 text-black rounded-full hover:bg-gray-200 transition-colors"
+                  onClick={() => setDemoSettings(s => ({ ...s, size: Math.max(s.size - 10, 30) }))}
+                >
+                  Reducir Tamaño
+                </button>
+                <button 
+                  className="px-4 py-2 bg-gray-100 text-black rounded-full hover:bg-gray-200 transition-colors"
+                  onClick={() => setDemoSettings(s => ({ ...s, size: s.size + 10 }))}
+                >
+                  Aumentar Tamaño
+                </button>
               </div>
             </div>
           </section>
 
-          {/* Sección de Práctica */}
-          <section id="practica" className="py-20 px-6 bg-white">
-            <div className="max-w-6xl mx-auto">
-              <h3 className="text-3xl font-bold mb-12 text-center" style={{ fontFamily: 'Playfair Display, serif' }}>
+          {/* Práctica */}
+          <section className="py-20 px-6" id="práctica">
+            <div className="max-w-7xl mx-auto">
+              <h3 className="text-3xl font-bold mb-6 text-center" style={{ fontFamily: 'Playfair Display, serif' }}>
                 Ejercicios Prácticos
               </h3>
-
-              <div className="grid md:grid-cols-3 gap-6">
-                {principles.map(p => (
-                  <div 
-                    key={p.id}
-                    className="bg-gray-50 p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition-shadow"
-                  >
-                    <div className="flex items-center gap-2 mb-4">
-                      <i data-lucide={p.icon} className="w-5 h-5"></i>
-                      <h4 className="font-medium">{p.title}</h4>
-                    </div>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      {p.applications.slice(0, 3).map((app, i) => (
-                        <li key={i} className="flex gap-2 items-start">
-                          <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mt-1" />
-                          {app}
-                        </li>
-                      ))}
-                    </ul>
-                    <button className="mt-4 text-sm font-medium text-black hover:underline">
-                      Ver ejercicio →
-                    </button>
-                  </div>
-                ))}
+              <p className="text-center text-gray-600 max-w-2xl mx-auto mb-10">
+                Pon a prueba tus conocimientos con estos ejercicios interactivos. 
+                Identifica los principios de Gestalt aplicados en diferentes escenarios de diseño.
+              </p>
+              <div className="flex justify-center">
+                <button 
+                  className="px-6 py-3 bg-black text-white rounded-full hover:bg-gray-900 transition-colors font-medium"
+                  onClick={() => setShowExercises(!showExercises)}
+                >
+                  {showExercises ? 'Ocultar Ejercicios' : 'Mostrar Ejercicios'}
+                </button>
               </div>
+
+              {showExercises && (
+                <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {principles.map((p) => (
+                    <div 
+                      key={p.id} 
+                      className="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow"
+                    >
+                      <h4 className="text-lg font-semibold mb-2">{p.title}</h4>
+                      <p className="text-gray-600 text-sm mb-4">{p.description}</p>
+                      <button className="px-4 py-2 bg-gray-100 text-black rounded-full hover:bg-gray-200 transition-colors text-sm">
+                        Practicar
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </section>
 
           {/* Footer */}
           <footer className="bg-gray-50 py-12 px-6 border-t border-gray-100">
-           <section className="bg-gray-50 py-12 px-6 border-t border-gray-100">
-  <div className="max-w-7xl mx-auto">
-    <div className="text-center mb-8">
-      <h2
-        className="text-3xl md:text-4xl font-light text-black"
-        style={{ fontFamily: 'Playfair Display, serif' }}
-      >
-        Laboratorio de Principios
-      </h2>
-      <p className="text-gray-600 mt-4 text-lg">
-        Experimenta y practica con los principios de Gestalt en tiempo real.
-      </p>
-    </div>
-
-    {/* Botón Ver Ejercicios */}
-    <div className="flex justify-center mb-8">
-      <button
-        onClick={() => setShowExercises(!showExercises)}
-        className="px-8 py-3 border border-black text-black font-medium rounded-lg hover:bg-black hover:text-white transition-colors"
-      >
-        {showExercises ? 'Ocultar Ejercicios' : 'Ver Ejercicios'}
-      </button>
-    </div>
-
-    {/* Panel de Ejercicios */}
-    {showExercises && (
-      <div className="max-w-3xl mx-auto bg-white border border-black rounded-lg shadow-lg p-6 mb-12 text-left">
-        <h3
-          className="text-xl font-semibold mb-4"
-          style={{ fontFamily: 'Playfair Display, serif' }}
-        >
-          Ejercicios de Práctica
-        </h3>
-        <ul className="text-gray-800 space-y-3 text-base">
-          <li>• Diseña una tarjeta agrupando elementos por proximidad.</li>
-          <li>• Busca 3 ejemplos de la ley de la similitud en páginas web.</li>
-          <li>• Redibuja un logotipo aplicando la ley del cierre.</li>
-          <li>• Crea un patrón aplicando figura y fondo.</li>
-          <li>• Haz un mini layout usando la ley de la región común.</li>
-        </ul>
-      </div>
-    )}
-
-    {/* Aquí puede ir tu contenido de demos o controles */}
-    <div className="md:w-1/2 b
-            <div className="max-w-6xl mx-auto text-center">
+            <div className="max-w-7xl mx-auto text-center">
               <h4 className="text-xl font-bold mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
                 Gestalt Academy
               </h4>
@@ -705,8 +659,7 @@
       );
     };
 
-    ReactDOM.createRoot(document.getElementById("root")).render(<GestaltAcademy />);
-
+    ReactDOM.createRoot(document.getElementById('root')).render(<GestaltAcademy />);
   </script>
 </body>
 </html>
